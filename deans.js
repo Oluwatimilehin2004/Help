@@ -1,6 +1,6 @@
 // ===== deans.js: Dean's List page (deans.html) =====
 (function(){
-  const essay = $('essay'), count = $('count');
+  const essay = $('essay'), count = $('count'), go = $('go');
   let current = null;
 
   loadPhoto();
@@ -22,9 +22,25 @@
     return Object.values(ev).join('\n');
   }
 
+  // Google Form field IDs from the Dean's List form
+  function formLink(){
+    const p = new URLSearchParams();
+    p.set('usp', 'pp_url');
+    p.set('entry.795334191', 'A student');
+    p.set('entry.1472947570', NAME.first + ' ' + NAME.last);
+    p.set('entry.565231103', NAME.email);
+    p.set('entry.712511688', NAME.programme);
+    if (NAME.intake) p.set('entry.1111181027', NAME.intake);
+    if (essay.value.trim()) p.set('entry.237619954', essay.value.trim());
+    const ev = evidenceFor(current);
+    if (ev) p.set('entry.1369585079', ev);
+    return CONFIG.deansFormUrl + '?' + p.toString();
+  }
+  function refreshLink(){ go.href = formLink(); }
+
   function renderDetails(g){
     const box = $('fields');
-    box.innerHTML = '<p class="fields-title">My details for the form</p>';
+    box.innerHTML = '<p class="fields-title">My details, in case anything didn’t fill in</p>';
     const ev = evidenceFor(g);
     const many = ev.includes('\n');
     renderFields(box, [
@@ -42,7 +58,7 @@
   function pick(g, scroll){
     current = g;
     essay.value = g.dl;
-    updateCount(); renderDetails(g); unlock('s2'); unlock('s3');
+    updateCount(); renderDetails(g); refreshLink(); unlock('s2'); unlock('s3');
     if (scroll) $('s2').scrollIntoView({behavior: REDUCE ? 'auto' : 'smooth', block:'start'});
   }
 
@@ -57,13 +73,14 @@
     pick(fromHash, false);
   }
 
-  essay.addEventListener('input', updateCount);
-  $('reset').addEventListener('click', () => { if(current){ essay.value = current.dl; updateCount(); toast('Back to the original'); } });
+  essay.addEventListener('input', () => { updateCount(); refreshLink(); });
+  $('reset').addEventListener('click', () => { if(current){ essay.value = current.dl; updateCount(); refreshLink(); toast('Back to the original'); } });
 
-  $('go').href = CONFIG.deansFormUrl;
-  $('go').addEventListener('click', () => {
+  refreshLink();
+  go.addEventListener('click', () => {
     if(!current) return;
-    copyText(essay.value.trim()).then(ok => toast(ok ? 'Nomination copied. Paste it into the “why” box.' : 'Copy didn’t work. Select the text in step 2 and copy it.'));
+    refreshLink();
+    copyText(essay.value.trim()).then(ok => toast(ok ? 'Opening the form. Your essay is copied too, just in case.' : 'Opening the form.'));
   });
 
   $('done').addEventListener('click', () => {

@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Papa for the Dean’s List</title>
+<meta name="description" content="Nominate Ayomide (Papa) for ALU’s Dean’s Leader List. Takes about two minutes.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌉</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="wrap">
+  <div class="wall" aria-hidden="true">
+    <div class="note n1">Ẹ n lẹ<small>Yoruba</small></div>
+    <div class="note n2">Hello<small>English</small></div>
+    <div class="note n3">Hola<small>Spanish</small></div>
+    <div class="note n4">Bonjour<small>French</small></div>
+    <div class="note n5">Muraho<small>Kinyarwanda</small></div>
+    <div class="papa">
+      <div class="face" id="face"><span class="initial">Papa<small>that’s me</small></span></div>
+      <div class="wave">👋</div>
+      <span class="tag">El Papa</span>
+    </div>
+  </div>
+
+  <h1>Put Papa on the Dean’s List</h1>
+  <p class="aka">Officially Ayomide. To most of you, just Papa.</p>
+  <p class="lede">The Dean’s Leader List recognises students whose leadership made a real, measurable difference to at least 50 people. If I’ve been part of that for you, through an event, a hike or a study session, I’d be grateful for your nomination.</p>
+  <span class="deadline">Nominations close 20 December</span>
+
+  <section id="s1">
+    <h2><span class="step">1</span>Still everywhere, I know 😂 Pick one.</h2>
+    <p class="hint">Your nomination will be written from that angle, so it sounds like it came from you.</p>
+    <div class="groups" id="groups"></div>
+  </section>
+
+  <section id="s2" class="locked" aria-disabled="true">
+    <h2><span class="step">2</span>Your nomination is ready</h2>
+    <p class="hint">This is the text you’ll paste into the form’s “why are you nominating” box. <b>It’s good to go as it is.</b> If you want it to sound more like you, tap the text and change anything you like.</p>
+    <label for="essay" class="sr">Your nomination text</label>
+    <textarea id="essay" spellcheck="true"></textarea>
+    <div class="meta">
+      <span class="count" id="count" aria-live="polite">0 words</span>
+      <button class="link" id="reset" type="button">Undo my changes</button>
+    </div>
+  </section>
+
+  <section id="s3" class="locked" aria-disabled="true">
+    <h2><span class="step">3</span>Now nominate me</h2>
+    <ol class="how">
+      <li><b>Tap the green button.</b> It copies your nomination and opens the Dean’s List form (a Google Form) in a new tab.</li>
+      <li><b>If Google asks you to sign in,</b> use your ALU student email, the one ending in @alustudent.com.</li>
+      <li><b>Fill in my details.</b> Come back to this tab and use the copy buttons below. For programme and intake, pick the option shown.</li>
+      <li><b>Paste your nomination</b> into “Why are you nominating this student?”</li>
+      <li><b>Paste my evidence link</b> into the evidence box.</li>
+      <li><b>Tick “Yes” on the five declarations and submit.</b> They confirm that what you wrote is true, so change anything you can’t personally vouch for.</li>
+    </ol>
+    <a class="cta" id="go" href="https://docs.google.com/forms/d/e/1FAIpQLSceH_SEI4HLP_g3n-gmYNl29mjpC9BsT-lb0v7ZDl2UUuuXvw/viewform" target="_blank" rel="noopener">
+      Copy my nomination and open the Dean’s List form
+      <small>Opens in a new tab. Keep this one open for my details.</small>
+    </a>
+
+    <div class="fields" id="fields">
+      <p class="fields-title">My details for the form</p>
+    </div>
+
+    <div class="after"><button class="ghost" id="done" type="button">Done! Papa’s on the list (hopefully)</button></div>
+
+    <div class="thanks" id="thanks" role="status">
+      <h3>Ẹ ṣé gan!</h3>
+      <p>That’s “thank you so much” in Yoruba, and I mean it. Whatever the committee decides, thank you for vouching for me.</p>
+      <p>Papa</p>
+    </div>
+
+  </section>
+
+  <p class="privacy">Haven’t nominated me for the Reconciliation League yet? <a href="index.html" style="color:inherit">Do that one first</a>, it closes sooner.</p>
+</main>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script src="shared.js"></script>
+<script src="deans.js"></script>
+</body>
+</html>

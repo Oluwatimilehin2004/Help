@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Papa’s nomination count</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="wrap">
+  <p class="aka">Reconciliation League: people who tapped “Done! I nominated Papa”</p>
+  <div class="stat-big" id="total">…</div>
+  <p class="hint">Counted once per phone or laptop. It shows who says they nominated, not ALU’s official tally, which stays private. Refreshes every 30 seconds.</p>
+
+  <div class="stat-list" id="list"></div>
+
+  <p class="privacy" id="updated"></p>
+</main>
+<script>
+const BASE = "https://abacus.jasoncameron.dev";
+const NS = "papa-reconciliation-2026-aojudun";
+const KEYS = [
+  ["nominated-alive", "ALU Alive events"],
+  ["nominated-kmc", "KMC outings"],
+  ["nominated-python", "Python sessions"],
+  ["nominated-class", "Our class"],
+  ["nominated-friends", "Friends"],
+  ["deans-done", "Dean’s List nominations (total)"],
+  ["deans-done-alive", "Dean’s List from ALU Alive"],
+  ["deans-done-kmc", "Dean’s List from KMC"],
+  ["deans-done-python", "Dean’s List from Python sessions"],
+  ["deans-done-class", "Dean’s List from our class"],
+  ["deans-done-friends", "Dean’s List from friends"]
+];
+
+async function get(key){
+  try {
+    const r = await fetch(BASE + "/get/" + NS + "/" + key, {cache: "no-store"});
+    if (!r.ok) return 0;
+    const j = await r.json();
+    return j.value || 0;
+  } catch(e){ return null; }
+}
+
+async function load(){
+  const total = await get("nominated");
+  document.getElementById("total").textContent = total === null ? "?" : total;
+  const list = document.getElementById("list");
+  list.innerHTML = "";
+  for (const [key, label] of KEYS){
+    const v = await get(key);
+    const row = document.createElement("div"); row.className = "stat-row";
+    row.innerHTML = "<span></span><b></b>";
+    row.querySelector("span").textContent = label;
+    row.querySelector("b").textContent = v === null ? "?" : v;
+    list.appendChild(row);
+  }
+  document.getElementById("updated").textContent = total === null
+    ? "Couldn’t reach the counter. Check your connection and refresh."
+    : "Last updated " + new Date().toLocaleTimeString();
+}
+load();
+setInterval(load, 30000);
+</script>
+</body>
+</html>

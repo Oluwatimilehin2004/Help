@@ -18,7 +18,13 @@ const NAME = {
   year: "Year 2, Trimester 2",
   programme: "BSc. in Software Engineering",
   intake: "May 2025",        // must match the form's option exactly
-  evidence: "https://drive.google.com/drive/folders/1Xn_WsPUYiwuH79-1ESYE8oVq1t8z5WGr?usp=sharing"
+  evidence: {
+    "SPD" : "https://drive.google.com/drive/folders/1ARuuWvIKNE_PJdpHXkTi3h67APgmfpmc?usp=drive_link",
+    "ALU Alive" : "https://drive.google.com/drive/folders/1lkBgy8KXKfVlgThrC5RJRCUSjAQ-_N-v?usp=drive_link",
+    "KMC" : "https://drive.google.com/drive/folders/1eaJIBQvLYgVqaVopqP0AJNmeCrwg3soE?usp=drive_link",
+    "Our Class" : "https://drive.google.com/drive/folders/1XGscB9tTcuLwHypGPmTGtK_SfzQKZ8t5?usp=sharing",
+    "Student Success" : "https://drive.google.com/drive/folders/1AKeTRbvypT1QjNDF0eQ8CzvBUrQs8q_4?usp=sharing"
+  }
 };
 
 const GROUPS = [

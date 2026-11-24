@@ -1,45 +1,80 @@
-// ===== script.js: Reconciliation League page (index.html) =====
+// ===== script.js: Dean's List page (index.html) =====
 (function(){
   const essay = $('essay'), count = $('count'), go = $('go');
   let current = null;
 
   loadPhoto();
 
-  // FormAssembly field IDs from the ALU form
+  // Which evidence folder goes with which group
+  const EVIDENCE_KEYS = {
+    alive: 'ALU Alive',
+    kmc: 'KMC',
+    python: 'Student Success',
+    class: 'Our Class'
+  };
+
+  function evidenceFor(g){
+    const ev = NAME.evidence;
+    if (!ev) return '';
+    if (typeof ev === 'string') return ev;
+    if (g && EVIDENCE_KEYS[g.id] && ev[EVIDENCE_KEYS[g.id]]) return ev[EVIDENCE_KEYS[g.id]];
+    // Friends (or any group without its own folder) get every link
+    return Object.values(ev).join('\n');
+  }
+
+  // Google Form field IDs from the Dean's List form
   function formLink(){
     const p = new URLSearchParams();
-    p.set('tfa_2', NAME.first);
-    p.set('tfa_3', NAME.last);
-    p.set('tfa_1654', 'tfa_1655');          // Campus: ALU
-    p.set('tfa_1662', NAME.year);
-    if (essay.value.trim()) p.set('tfa_1652', essay.value.trim());
-    return CONFIG.formUrl + '?' + p.toString();
+    p.set('usp', 'pp_url');
+    p.set('entry.795334191', 'A student');
+    p.set('entry.1472947570', NAME.first + ' ' + NAME.last);
+    p.set('entry.565231103', NAME.email);
+    p.set('entry.712511688', NAME.programme);
+    if (NAME.intake) p.set('entry.1111181027', NAME.intake);
+    if (essay.value.trim()) p.set('entry.237619954', essay.value.trim());
+    const ev = evidenceFor(current);
+    if (ev) p.set('entry.1369585079', ev);
+    return CONFIG.deansFormUrl + '?' + p.toString();
   }
   function refreshLink(){ go.href = formLink(); }
 
-  function updateCount(){
-    const n = wordCount(essay.value);
-    count.textContent = n + ' words' + (n < 100 ? ', needs at least 100' : n > 150 ? ', trim it to 150 or fewer' : ', perfect');
-    count.classList.toggle('bad', n < 100 || n > 150);
+  function renderDetails(g){
+    const box = $('fields');
+    box.innerHTML = '<p class="fields-title">My details, in case anything didn’t fill in</p>';
+    const ev = evidenceFor(g);
+    const many = ev.includes('\n');
+    renderFields(box, [
+      ['Nominee name (first and last)', NAME.first + ' ' + NAME.last],
+      ['Nominee email', NAME.email],
+      ['Academic programme (pick this option)', NAME.programme],
+      ['Intake (pick this option)', NAME.intake],
+      [many ? 'Evidence of impact (paste all these links)' : 'Evidence of impact (paste this link)', ev]
+    ]);
+    box.querySelectorAll('.field b').forEach(b => { b.style.whiteSpace = 'pre-line'; });
   }
 
-  renderGroups($('groups'), g => {
+  function updateCount(){ count.textContent = wordCount(essay.value) + ' words'; }
+
+  function pick(g, scroll){
     current = g;
-    essay.value = g.rl;
-    updateCount(); refreshLink(); unlock('s2'); unlock('s3');
-    $('deansLink').href = 'deans.html#' + g.id;
-    $('s2').scrollIntoView({behavior: REDUCE ? 'auto' : 'smooth', block:'start'});
-  });
+    essay.value = g.dl;
+    updateCount(); renderDetails(g); refreshLink(); unlock('s2'); unlock('s3');
+    if (scroll) $('s2').scrollIntoView({behavior: REDUCE ? 'auto' : 'smooth', block:'start'});
+  }
+
+  renderGroups($('groups'), pick);
+  renderDetails(null);
+
+  // A link ending in #alive, #kmc, #python, #class or #friends pre-selects that group
+  const fromHash = GROUPS.find(g => '#' + g.id === location.hash);
+  if (fromHash) {
+    const btn = $('groups').querySelector('[data-id="' + fromHash.id + '"]');
+    if (btn) btn.setAttribute('aria-pressed','true');
+    pick(fromHash, false);
+  }
 
   essay.addEventListener('input', () => { updateCount(); refreshLink(); });
-  $('reset').addEventListener('click', () => { if(current){ essay.value = current.rl; updateCount(); refreshLink(); toast('Back to the original'); } });
-
-  renderFields($('fields'), [
-    ['First name', NAME.first],
-    ['Last name', NAME.last],
-    ['Campus (pick this option)', 'ALU'],
-    ['Year', NAME.year]
-  ]);
+  $('reset').addEventListener('click', () => { if(current){ essay.value = current.dl; updateCount(); refreshLink(); toast('Back to the original'); } });
 
   refreshLink();
   go.addEventListener('click', () => {
@@ -51,6 +86,6 @@
   $('done').addEventListener('click', () => {
     const t = $('thanks'); t.classList.add('show'); confetti();
     t.scrollIntoView({behavior: REDUCE ? 'auto' : 'smooth', block:'center'});
-    countOnce('papa-rl-done', ['nominated'].concat(current ? ['nominated-' + current.id] : []));
+    countOnce('papa-dean-done', ['deans-done'].concat(current ? ['deans-done-' + current.id] : []));
   });
 })();
